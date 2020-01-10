@@ -1,6 +1,6 @@
 Name:           nautilus-open-terminal
 Version:        0.17
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        Nautilus extension for an open terminal shortcut
 
 Group:          User Interface/Desktops
@@ -15,8 +15,17 @@ BuildRequires:	libtool automake autoconf gettext intltool
 # need extensions
 BuildRequires:	nautilus-devel
 
+# Bug 716398 - missing dependency to gnome-terminal
+Requires: gnome-terminal
+
 # https://bugzilla.gnome.org/show_bug.cgi?id=597376
 Patch0: leak.patch
+# nautilus-open-terminal is not reflected latest ja.po
+# https://bugzilla.redhat.com/show_bug.cgi?id=630236
+Patch1: nautilus-open-terminal_msgmerged_for_ja.po.diff
+# nautilus-open-terminal hardsets $SHELL -l
+# https://bugzilla.redhat.com/show_bug.cgi?id=640496
+Patch2: nautilus-open-terminal-0.18-shell-invocation.patch
 
 %description
 The nautilus-open-terminal extension provides a right-click "Open
@@ -25,6 +34,9 @@ Terminal" option for nautilus users who prefer that option.
 %prep
 %setup -q
 %patch0 -p1 -b .leak
+%patch1 -p1 -b .jp-translation
+%patch2 -p1 -b .shell-invocation
+
 libtoolize --force --copy
 autoreconf
 
@@ -60,6 +72,11 @@ gconftool-2 \
 %{_libdir}/nautilus/extensions-2.0/*.so*
 
 %changelog
+* Thu Jul 28 2011 Tomas Bzatek <tbzatek@redhat.com> - 0.17-4
+- Require gnome-terminal to have at least one terminal installed (#716398)
+- Update japanese translation (#630236)
+- Fix terminal invocation parameters (#640496)
+
 * Mon Oct  5 2009 Matthias Clasen <mclasen@redhat.com> - 0.17-2
 - Plug a small leak
 

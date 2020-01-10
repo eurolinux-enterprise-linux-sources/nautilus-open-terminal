@@ -1,0 +1,34 @@
+From 610d61ddb0ad6504a6e0d5823670b206bdbb52dd Mon Sep 17 00:00:00 2001
+From: Christian Neumair <cneumair@gnome.org>
+Date: Fri, 01 Jan 2010 20:20:06 +0000
+Subject: Fix terminal invocation parameters (#602141)
+
+* Remote SSH terminal: Open login shell with - instead of -l parameter.
+* Local terminal: Open interactive shell, i.e. drop -l parameter.
+---
+diff --git a/src/nautilus-open-terminal.c b/src/nautilus-open-terminal.c
+index f19cfd0..2ee04ce 100644
+--- a/src/nautilus-open-terminal.c
++++ b/src/nautilus-open-terminal.c
+@@ -213,7 +213,8 @@ get_remote_ssh_command (const char *uri,
+ 	if (command_to_run != NULL) {
+ 		remote_command = g_strdup_printf ("cd %s && exec %s", quoted_path, command_to_run);
+ 	} else {
+-		remote_command = g_strdup_printf ("cd %s && exec $SHELL -l", quoted_path);
++		/* login shell */
++		remote_command = g_strdup_printf ("cd %s && exec $SHELL -", quoted_path);
+ 	}
+ 
+ 	quoted_remote_command = g_shell_quote (remote_command);
+@@ -300,7 +301,8 @@ get_terminal_command_for_file_info (NautilusFileInfo *file_info,
+ 		if (command_to_run != NULL) {
+ 			command = g_strdup_printf ("cd %s && exec %s", quoted_path, command_to_run);
+ 		} else {
+-			command = g_strdup_printf ("cd %s && exec $SHELL -l", quoted_path);
++			/* interactive shell */
++			command = g_strdup_printf ("cd %s && exec $SHELL", quoted_path);
+ 		}
+ 
+ 		g_free (quoted_path);
+--
+cgit v0.9
