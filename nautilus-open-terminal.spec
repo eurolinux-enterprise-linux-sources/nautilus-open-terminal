@@ -5,7 +5,7 @@
 
 Name:           nautilus-open-terminal
 Version:        0.20
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Nautilus extension for an open terminal shortcut
 
 Group:          User Interface/Desktops
@@ -79,6 +79,12 @@ fi
 %{_libdir}/nautilus/extensions-3.0/*.so*
 
 %changelog
+* Fri Jan 24 2014 Daniel Mach <dmach@redhat.com> - 0.20-3
+- Mass rebuild 2014-01-24
+
+* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 0.20-2
+- Mass rebuild 2013-12-27
+
 * Wed Feb 27 2013 Kalev Lember <kalevlember@gmail.com> - 0.20-1
 - Update to 0.20
 
